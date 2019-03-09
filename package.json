@@ -1,0 +1,43 @@
+{
+  "name": "PersonalBlog",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
+    "lint": "tslint --project tsconfig.json --config tslint.json 'src/**/*.ts'",
+    "lint:fix": "npm run lint --fix",
+    "start": "nodemon -e ts --exec \"npm run compile\"",
+    "compile": "tsc && node ./dist/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^3.0.4",
+    "hapi": "^18.1.0",
+    "hapi-auth-jwt2": "^8.3.0",
+    "hapi-cors": "^1.0.3",
+    "joi": "^14.3.1",
+    "jsonwebtoken": "^8.5.0",
+    "mysql": "^2.14.1",
+    "prettier": "^1.16.4",
+    "ramda": "^0.26.1",
+    "ramda-adjunct": "^2.16.1",
+    "reflect-metadata": "^0.1.10",
+    "tslint": "^5.13.0",
+    "typeorm": "0.2.14"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^3.0.0",
+    "@types/hapi": "^18.0.1",
+    "@types/jsonwebtoken": "^8.3.0",
+    "@types/node": "^8.10.42",
+    "@types/ramda": "^0.25.51",
+    "ts-node": "^3.3.0",
+    "tslint-config-airbnb": "^5.11.1",
+    "tslint-config-prettier": "^1.18.0",
+    "typescript": "^3.4.0-dev.20190306"
+  }
+}
