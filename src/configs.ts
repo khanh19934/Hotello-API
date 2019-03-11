@@ -14,5 +14,11 @@ export default {
   },
   TOKEN: {
     SECRET_KEY: '23423523fdvfdghjre234kdnsbgjksdbgkdbsk'
+  },
+  OTP: {
+    SECRET_KEY: 'jnveirbiu34834yg2gbdieufi9372rg283gd!#@#$!'
+  },
+  SEND_GRID: {
+    API_KEY: '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'
   }
 }

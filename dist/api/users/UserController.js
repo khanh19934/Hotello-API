@@ -35,12 +35,49 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var sgMail = require("@sendgrid/mail");
 var Boom = require("boom");
+var configs_1 = require("../../configs");
+var email_1 = require("../../templates/email");
 var common_1 = require("../../utils/common");
 var UserController = /** @class */ (function () {
     function UserController(userServices) {
         this.userServices = userServices;
     }
+    UserController.prototype.requestOTP = function (req, h) {
+        return __awaiter(this, void 0, void 0, function () {
+            var otpCode, _a, email, first_name, last_name, fullName, msg;
+            return __generator(this, function (_b) {
+                otpCode = common_1.generateOTPCode();
+                sgMail.setApiKey(configs_1.default.SEND_GRID.API_KEY);
+                _a = req.payload, email = _a.email, first_name = _a.first_name, last_name = _a.last_name;
+                fullName = first_name + " " + last_name;
+                msg = {
+                    to: email,
+                    // To do: will change this email when have original email
+                    from: 'khanh19934@gmail.com',
+                    subject: 'Hotello Active Code',
+                    text: 'Hotello Active code',
+                    html: email_1.default(otpCode, fullName)
+                };
+                sgMail.send(msg);
+                return [2 /*return*/, h.response({ statusCode: 200, message: 'OK', data: null })];
+            });
+        });
+    };
+    UserController.prototype.validateOTP = function (req, h) {
+        return __awaiter(this, void 0, void 0, function () {
+            var otpCode, _a, isValid, message;
+            return __generator(this, function (_b) {
+                otpCode = req.payload.otpCode;
+                _a = common_1.checkValidOTPCode(otpCode), isValid = _a.isValid, message = _a.message;
+                if (isValid) {
+                    return [2 /*return*/, h.response({ statusCode: 200, message: 'OK', data: null })];
+                }
+                return [2 /*return*/, h.response({ statusCode: 200, message: message, data: null })];
+            });
+        });
+    };
     UserController.prototype.createUser = function (req, h) {
         return __awaiter(this, void 0, void 0, function () {
             var res;

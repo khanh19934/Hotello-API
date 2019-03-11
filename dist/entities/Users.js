@@ -92,7 +92,7 @@ var Users = /** @class */ (function () {
         __metadata("design:type", String)
     ], Users.prototype, "firstName", void 0);
     __decorate([
-        typeorm_1.Column(),
+        typeorm_1.Column({ name: 'address' }),
         __metadata("design:type", String)
     ], Users.prototype, "address", void 0);
     __decorate([
@@ -100,9 +100,25 @@ var Users = /** @class */ (function () {
         __metadata("design:type", Number)
     ], Users.prototype, "phoneNumber", void 0);
     __decorate([
-        typeorm_1.Column(),
-        __metadata("design:type", Boolean)
-    ], Users.prototype, "active", void 0);
+        typeorm_1.Column({ name: 'country_id' }),
+        __metadata("design:type", Number)
+    ], Users.prototype, "countryId", void 0);
+    __decorate([
+        typeorm_1.Column({ name: 'city_id' }),
+        __metadata("design:type", Number)
+    ], Users.prototype, "cityId", void 0);
+    __decorate([
+        typeorm_1.Column({ name: 'district_id' }),
+        __metadata("design:type", Number)
+    ], Users.prototype, "districtId", void 0);
+    __decorate([
+        typeorm_1.Column({ name: 'hotel_id' }),
+        __metadata("design:type", Number)
+    ], Users.prototype, "hotelId", void 0);
+    __decorate([
+        typeorm_1.Column({ name: 'role' }),
+        __metadata("design:type", String)
+    ], Users.prototype, "role", void 0);
     __decorate([
         typeorm_1.Column({ name: 'created_at' }),
         __metadata("design:type", Date)

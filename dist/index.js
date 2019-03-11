@@ -40,6 +40,7 @@ var Hapi = require("hapi");
 var hapiJwt = require("hapi-auth-jwt2");
 var typeorm_1 = require("typeorm");
 var configs_1 = require("./configs");
+var Configs = require("./configs/index");
 var Constants_1 = require("./constants/Constants");
 var Users_1 = require("./entities/Users");
 var routeResolver_1 = require("./routeResolver");
@@ -51,12 +52,13 @@ var newServer = new Hapi.Server({
         cors: true
     }
 });
+var serverConfigs = Configs.getServerConfigs();
 var init = function (server) { return __awaiter(_this, void 0, void 0, function () {
-    var connection, userRepo, routes, _i, routes_1, route, e_1;
+    var connection, plugins, pluginPromises_1, userRepo, routes, _i, routes_1, route, e_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                _a.trys.push([0, 3, , 4]);
+                _a.trys.push([0, 4, , 5]);
                 return [4 /*yield*/, typeorm_1.createConnection({
                         type: 'mysql',
                         host: configs_1.default.DATABASE.HOST,
@@ -68,8 +70,18 @@ var init = function (server) { return __awaiter(_this, void 0, void 0, function 
                     })];
             case 1:
                 connection = _a.sent();
-                return [4 /*yield*/, server.register([hapiJwt])];
+                plugins = serverConfigs.plugins;
+                pluginPromises_1 = [];
+                plugins.forEach(function (pluginName) {
+                    var plugin = require("./plugins/" + pluginName).default();
+                    console.log("Register Plugin " + plugin.info().name + " v" + plugin.info().version);
+                    pluginPromises_1.push(plugin.register(server));
+                });
+                return [4 /*yield*/, Promise.all(pluginPromises_1)];
             case 2:
+                _a.sent();
+                return [4 /*yield*/, server.register([hapiJwt])];
+            case 3:
                 _a.sent();
                 userRepo = connection.getRepository(Users_1.default);
                 server.auth.strategy('jwt', 'jwt', {
@@ -84,11 +96,11 @@ var init = function (server) { return __awaiter(_this, void 0, void 0, function 
                     route.registerToServer(server);
                 }
                 server.start().then(function () { return console.log("Server is running in " + server.info.uri); });
-                return [3 /*break*/, 4];
-            case 3:
+                return [3 /*break*/, 5];
+            case 4:
                 e_1 = _a.sent();
                 throw e_1;
-            case 4: return [2 /*return*/];
+            case 5: return [2 /*return*/];
         }
     });
 }); };

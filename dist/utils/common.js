@@ -37,8 +37,11 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
 var bcrypt = require("bcrypt");
+var crypto = require("crypto");
 var jwt = require("jsonwebtoken");
+var otplib_1 = require("otplib");
 var ramda_adjunct_1 = require("ramda-adjunct");
+var configs_1 = require("../configs");
 var Constants_1 = require("../constants/Constants");
 var createHash = function (password) { return __awaiter(_this, void 0, void 0, function () { return __generator(this, function (_a) {
     return [2 /*return*/, bcrypt.hash(password, Constants_1.default.SALT_ROUND)];
@@ -48,9 +51,7 @@ var comparePassword = function (password, hashPassword) { return __awaiter(_this
     return [2 /*return*/, bcrypt.compare(password, hashPassword)];
 }); }); };
 exports.comparePassword = comparePassword;
-var getToken = function (id) {
-    return jwt.sign({ id: id }, Constants_1.default.TOKEN_SECRET_KEY, { expiresIn: 30 * 24 + "h" });
-};
+var getToken = function (id) { return jwt.sign({ id: id }, Constants_1.default.TOKEN_SECRET_KEY, { expiresIn: 30 * 24 + "h" }); };
 exports.getToken = getToken;
 var validateUserId = function (userRepository) { return function (decoded, request) { return __awaiter(_this, void 0, void 0, function () {
     var res;
@@ -70,4 +71,23 @@ var validateUserId = function (userRepository) { return function (decoded, reque
     });
 }); }; };
 exports.validateUserId = validateUserId;
+var generateOTPCode = function () {
+    otplib_1.totp.options = { crypto: crypto, digits: 6, step: 60 * 10 };
+    var secret = configs_1.default.OTP.SECRET_KEY;
+    var otpCode = otplib_1.totp.generate(secret);
+    return otpCode;
+};
+exports.generateOTPCode = generateOTPCode;
+var checkValidOTPCode = function (otpCode) {
+    var step = otplib_1.totp.timeUsed();
+    var isValid = otplib_1.totp.check(otpCode, configs_1.default.OTP.SECRET_KEY);
+    if (isValid) {
+        if (step !== 0) {
+            return { isValid: true, message: 'OK' };
+        }
+        return { isValid: false, message: 'OTP_EXPIRED' };
+    }
+    return { isValid: false, message: 'OTP_NOT_CORRECT' };
+};
+exports.checkValidOTPCode = checkValidOTPCode;
 //# sourceMappingURL=common.js.map

@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+var Joi = require("joi");
 var UserRoutes = /** @class */ (function () {
     function UserRoutes(userController) {
         this.userController = userController;
@@ -7,7 +8,43 @@ var UserRoutes = /** @class */ (function () {
     UserRoutes.prototype.registerToServer = function (server) {
         server.bind(this.userController);
         server.route({
-            path: '/signUp',
+            path: '/register/request-otp',
+            method: 'POST',
+            handler: this.userController.requestOTP,
+            options: {
+                auth: false,
+                validate: {
+                    payload: {
+                        email: Joi.string()
+                            .email()
+                            .required(),
+                        first_name: Joi.string().required(),
+                        last_name: Joi.string().required()
+                    }
+                },
+                tags: ['api', 'register'],
+                description: 'Request OTP code via email for submit register'
+            }
+        });
+        server.route({
+            path: '/register/validate-otp',
+            method: 'POST',
+            handler: this.userController.validateOTP,
+            options: {
+                auth: false,
+                validate: {
+                    payload: {
+                        otpCode: Joi.string()
+                            .max(6)
+                            .required()
+                    }
+                },
+                tags: ['api', 'register'],
+                description: 'Validate OTP code for submit register'
+            }
+        });
+        server.route({
+            path: '/register',
             method: 'POST',
             handler: this.userController.createUser,
             options: {

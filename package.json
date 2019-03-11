@@ -15,6 +15,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@sendgrid/mail": "^6.3.1",
     "bcrypt": "^3.0.4",
     "hapi": "^18.1.0",
     "hapi-auth-jwt2": "^8.3.0",
@@ -22,6 +23,8 @@
     "joi": "^14.3.1",
     "jsonwebtoken": "^8.5.0",
     "mysql": "^2.14.1",
+    "nconf": "^0.10.0",
+    "otplib": "^11.0.0",
     "prettier": "^1.16.4",
     "ramda": "^0.26.1",
     "ramda-adjunct": "^2.16.1",
@@ -35,9 +38,12 @@
     "@types/jsonwebtoken": "^8.3.0",
     "@types/node": "^8.10.42",
     "@types/ramda": "^0.25.51",
+    "hapi-swagger": "^9.3.2",
+    "inert": "^5.1.2",
     "ts-node": "^3.3.0",
     "tslint-config-airbnb": "^5.11.1",
     "tslint-config-prettier": "^1.18.0",
-    "typescript": "^3.4.0-dev.20190306"
+    "typescript": "^3.4.0-dev.20190306",
+    "vision": "^5.4.4"
   }
 }

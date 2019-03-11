@@ -18,14 +18,26 @@ export class Users {
   @Column({ name: 'first_name' })
   public firstName: string
 
-  @Column()
+  @Column({ name: 'address' })
   public address: string
 
   @Column({ name: 'phone_number' })
   public phoneNumber: number
 
-  @Column()
-  public active: boolean
+  @Column({ name: 'country_id' })
+  public countryId: number
+
+  @Column({ name: 'city_id' })
+  public cityId: number
+
+  @Column({ name: 'district_id' })
+  public districtId: number
+
+  @Column({ name: 'hotel_id' })
+  public hotelId: number
+
+  @Column({ name: 'role' })
+  public role: string
 
   @Column({ name: 'created_at' })
   public createdAt: Date

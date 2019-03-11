@@ -1,10 +1,12 @@
 import * as Hapi from 'hapi'
 import * as hapiJwt from 'hapi-auth-jwt2'
-
 import { createConnection } from 'typeorm'
+
 import configs from './configs'
+import * as Configs from './configs/index'
 import Constants from './constants/Constants'
 import Users from './entities/Users'
+import { IPlugin } from './plugins/swagger'
 import routeResolver from './routeResolver'
 import { validateUserId } from './utils/common'
 
@@ -15,6 +17,8 @@ const newServer = new Hapi.Server({
     cors: true
   }
 })
+
+const serverConfigs = Configs.getServerConfigs()
 
 const init = async (server: Hapi.Server) => {
   try {
@@ -27,6 +31,18 @@ const init = async (server: Hapi.Server) => {
       database: configs.DATABASE.NAME,
       entities: [`${__dirname}/entities/*`]
     })
+
+    const plugins = serverConfigs.plugins
+
+    const pluginPromises: Array<Promise<any>> = []
+
+    plugins.forEach((pluginName: string) => {
+      const plugin: IPlugin = require(`./plugins/${pluginName}`).default()
+      console.log(`Register Plugin ${plugin.info().name} v${plugin.info().version}`)
+      pluginPromises.push(plugin.register(server))
+    })
+
+    await Promise.all(pluginPromises)
 
     await server.register([hapiJwt])
 
