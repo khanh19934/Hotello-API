@@ -128,6 +128,10 @@ var Users = /** @class */ (function () {
         __metadata("design:type", Date)
     ], Users.prototype, "updatedAt", void 0);
     __decorate([
+        typeorm_1.Column({ name: 'is_active' }),
+        __metadata("design:type", Boolean)
+    ], Users.prototype, "isActive", void 0);
+    __decorate([
         typeorm_1.AfterLoad(),
         __metadata("design:type", Function),
         __metadata("design:paramtypes", []),

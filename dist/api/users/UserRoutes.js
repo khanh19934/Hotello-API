@@ -15,11 +15,7 @@ var UserRoutes = /** @class */ (function () {
                 auth: false,
                 validate: {
                     payload: {
-                        email: Joi.string()
-                            .email()
-                            .required(),
-                        first_name: Joi.string().required(),
-                        last_name: Joi.string().required()
+                        id: Joi.number().required()
                     }
                 },
                 tags: ['api', 'register'],
@@ -36,7 +32,8 @@ var UserRoutes = /** @class */ (function () {
                     payload: {
                         otpCode: Joi.string()
                             .max(6)
-                            .required()
+                            .required(),
+                        id: Joi.number().required()
                     }
                 },
                 tags: ['api', 'register'],

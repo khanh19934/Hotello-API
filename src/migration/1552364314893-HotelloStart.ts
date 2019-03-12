@@ -42,6 +42,7 @@ export class HotelloStart1552364314893 implements MigrationInterface {
         country_id INT NOT NULL,
         city_id INT NOT NULL,
         district_id INT NOT NULL ,
+        is_active BOOLEAN not null default 0,
         role VARCHAR(100),
         hotel_id INT,
         created_at TIMESTAMP DEFAULT NOW(),
