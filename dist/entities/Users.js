@@ -97,7 +97,7 @@ var Users = /** @class */ (function () {
     ], Users.prototype, "address", void 0);
     __decorate([
         typeorm_1.Column({ name: 'phone_number' }),
-        __metadata("design:type", Number)
+        __metadata("design:type", String)
     ], Users.prototype, "phoneNumber", void 0);
     __decorate([
         typeorm_1.Column({ name: 'country_id' }),

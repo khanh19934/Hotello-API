@@ -66,7 +66,9 @@ var init = function (server) { return __awaiter(_this, void 0, void 0, function 
                         username: configs_1.default.DATABASE.USER,
                         password: configs_1.default.DATABASE.PASSWORD,
                         database: configs_1.default.DATABASE.NAME,
-                        entities: [__dirname + "/entities/*"]
+                        synchronize: false,
+                        entities: [__dirname + "/entities/*"],
+                        migrations: [__dirname + "/migration/*"]
                     })];
             case 1:
                 connection = _a.sent();

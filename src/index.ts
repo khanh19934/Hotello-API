@@ -29,7 +29,9 @@ const init = async (server: Hapi.Server) => {
       username: configs.DATABASE.USER,
       password: configs.DATABASE.PASSWORD,
       database: configs.DATABASE.NAME,
-      entities: [`${__dirname}/entities/*`]
+      synchronize: false,
+      entities: [`${__dirname}/entities/*`],
+      migrations: [`${__dirname}/migration/*`]
     })
 
     const plugins = serverConfigs.plugins

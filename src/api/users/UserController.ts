@@ -4,13 +4,19 @@ import * as Hapi from 'hapi'
 
 import configs from '../../configs'
 import { IUserServices } from '../../services/UserServices'
-import getEmailTemp from '../../templates/email'
 import { checkValidOTPCode, generateOTPCode, getToken } from '../../utils/common'
 import { IUserController } from './UserControllerInterface'
 
 export interface INewUserPayload {
   email: string
   password: string
+  firstName: string
+  lastName: string
+  phoneNumber: string
+  address: string
+  countryId: number
+  cityId: number
+  districtId: number
 }
 
 export default class UserController implements IUserController {
@@ -30,7 +36,12 @@ export default class UserController implements IUserController {
       from: 'khanh19934@gmail.com',
       subject: 'Hotello Active Code',
       text: 'Hotello Active code',
-      html: getEmailTemp(otpCode, fullName)
+      html: '<h1></h1>',
+      templateId: 'd-1daf0a34a5514a8b9d412c2ed2aa70de',
+      dynamic_template_data: {
+        fullName,
+        otp: otpCode
+      }
     }
 
     sgMail.send(msg)
@@ -51,13 +62,17 @@ export default class UserController implements IUserController {
   }
 
   public async createUser(req: Hapi.Request, h: Hapi.ResponseToolkit): Promise<Hapi.ResponseObject> {
-    const res = await this.userServices.createUser(req.payload as INewUserPayload)
+    try {
+      await this.userServices.createUser(req.payload as INewUserPayload)
 
-    return h.response({ statusCode: 200, message: 'ok', data: null })
+      return h.response({ statusCode: 200, message: 'ok', data: null })
+    } catch (e) {
+      throw Boom.forbidden(e)
+    }
   }
 
   public async login(req: Hapi.Request, h: Hapi.ResponseToolkit): Promise<Hapi.ResponseObject> {
-    const { email, password } = req.payload as INewUserPayload
+    const { email, password } = req.payload as { email: string; password: string }
 
     const { isValid, id } = await this.userServices.loginUserServices({
       email,

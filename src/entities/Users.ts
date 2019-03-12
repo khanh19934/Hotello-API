@@ -22,7 +22,7 @@ export class Users {
   public address: string
 
   @Column({ name: 'phone_number' })
-  public phoneNumber: number
+  public phoneNumber: string
 
   @Column({ name: 'country_id' })
   public countryId: number
