@@ -17,11 +17,7 @@ export default class UserRoutes implements IRoutes {
         auth: false,
         validate: {
           payload: {
-            email: Joi.string()
-              .email()
-              .required(),
-            first_name: Joi.string().required(),
-            last_name: Joi.string().required()
+            id: Joi.number().required()
           }
         },
         tags: ['api', 'register'],
@@ -39,7 +35,8 @@ export default class UserRoutes implements IRoutes {
           payload: {
             otpCode: Joi.string()
               .max(6)
-              .required()
+              .required(),
+            id: Joi.number().required()
           }
         },
         tags: ['api', 'register'],

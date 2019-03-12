@@ -3,6 +3,7 @@ import * as Boom from 'boom'
 import * as Hapi from 'hapi'
 
 import configs from '../../configs'
+import { convertRegisterResponseDTO } from '../../repositories/DTO/UserDTO'
 import { IUserServices } from '../../services/UserServices'
 import { checkValidOTPCode, generateOTPCode, getToken } from '../../utils/common'
 import { IUserController } from './UserControllerInterface'
@@ -23,38 +24,23 @@ export default class UserController implements IUserController {
   constructor(private userServices: IUserServices) {}
 
   public async requestOTP(req: Hapi.Request, h: Hapi.ResponseToolkit): Promise<Hapi.ResponseObject> {
-    const otpCode = generateOTPCode()
+    const { id } = req.payload as { id: number }
+    const res = await this.userServices.requestOTPServices(id)
 
-    sgMail.setApiKey(configs.SEND_GRID.API_KEY)
-
-    const { email, first_name, last_name } = req.payload as { email: string; first_name: string; last_name: string }
-    const fullName = `${first_name} ${last_name}`
-
-    const msg = {
-      to: email,
-      // To do: will change this email when have original email
-      from: 'khanh19934@gmail.com',
-      subject: 'Hotello Active Code',
-      text: 'Hotello Active code',
-      html: '<h1></h1>',
-      templateId: 'd-1daf0a34a5514a8b9d412c2ed2aa70de',
-      dynamic_template_data: {
-        fullName,
-        otp: otpCode
-      }
+    if (res) {
+      return h.response({ statusCode: 200, message: 'OK', data: null })
     }
-
-    sgMail.send(msg)
-
-    return h.response({ statusCode: 200, message: 'OK', data: null })
+    throw Boom.forbidden('User Not Found')
   }
 
   public async validateOTP(req: Hapi.Request, h: Hapi.ResponseToolkit): Promise<Hapi.ResponseObject> {
-    const { otpCode } = req.payload as { otpCode: string }
+    const { otpCode, id } = req.payload as { otpCode: string; id: number }
 
     const { isValid, message } = checkValidOTPCode(otpCode)
 
     if (isValid) {
+      await this.userServices.activeUser({ id })
+
       return h.response({ statusCode: 200, message: 'OK', data: null })
     }
 
@@ -63,9 +49,9 @@ export default class UserController implements IUserController {
 
   public async createUser(req: Hapi.Request, h: Hapi.ResponseToolkit): Promise<Hapi.ResponseObject> {
     try {
-      await this.userServices.createUser(req.payload as INewUserPayload)
+      const res = await this.userServices.createUser(req.payload as INewUserPayload)
 
-      return h.response({ statusCode: 200, message: 'ok', data: null })
+      return h.response({ statusCode: 200, message: 'ok', data: convertRegisterResponseDTO(res) })
     } catch (e) {
       throw Boom.forbidden(e)
     }

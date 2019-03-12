@@ -35,7 +35,9 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var sgMail = require("@sendgrid/mail");
 var ramda_adjunct_1 = require("ramda-adjunct");
+var configs_1 = require("../configs");
 var Users_1 = require("../entities/Users");
 var common_1 = require("../utils/common");
 var UserServices = /** @class */ (function () {
@@ -50,7 +52,6 @@ var UserServices = /** @class */ (function () {
                     case 0: return [4 /*yield*/, this.userRepository.findOne({ where: { email: payload.email } })];
                     case 1:
                         existedUser = _a.sent();
-                        console.log(existedUser);
                         if (!ramda_adjunct_1.isNilOrEmpty(existedUser)) {
                             throw new Error('User is existed');
                         }
@@ -82,6 +83,50 @@ var UserServices = /** @class */ (function () {
                         return [4 /*yield*/, common_1.comparePassword(password, res.password)];
                     case 2: return [2 /*return*/, (_b.isValid = _c.sent(), _b.id = res.id, _b)];
                 }
+            });
+        });
+    };
+    UserServices.prototype.requestOTPServices = function (id) {
+        return __awaiter(this, void 0, void 0, function () {
+            var res, otpCode, email, firstName, lastName, fullName, msg, e_1;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, this.userRepository.findOne(id)];
+                    case 1:
+                        res = _a.sent();
+                        otpCode = common_1.generateOTPCode();
+                        sgMail.setApiKey(configs_1.default.SEND_GRID.API_KEY);
+                        email = res.email, firstName = res.firstName, lastName = res.lastName;
+                        fullName = firstName + " " + lastName;
+                        msg = {
+                            to: email,
+                            // To do: will change this email when have original email
+                            from: 'khanh19934@gmail.com',
+                            subject: 'Hotello Active Code',
+                            text: 'Hotello Active code',
+                            templateId: configs_1.default.SEND_GRID.TEMPLATE_ID,
+                            dynamic_template_data: {
+                                fullName: fullName,
+                                otp: otpCode
+                            }
+                        };
+                        sgMail.send(msg);
+                        return [2 /*return*/, true];
+                    case 2:
+                        e_1 = _a.sent();
+                        return [2 /*return*/, false];
+                    case 3: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    UserServices.prototype.activeUser = function (_a) {
+        var id = _a.id;
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_b) {
+                return [2 /*return*/, this.userRepository.update(id, { isActive: true })];
             });
         });
     };

@@ -45,6 +45,9 @@ export class Users {
   @Column({ name: 'updated_at' })
   public updatedAt: Date
 
+  @Column({ name: 'is_active' })
+  public isActive: boolean
+
   private tempPassword: string
 
   @AfterLoad()

@@ -19,6 +19,7 @@ export default {
     SECRET_KEY: 'jnveirbiu34834yg2gbdieufi9372rg283gd!#@#$!'
   },
   SEND_GRID: {
-    API_KEY: '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'
+    API_KEY: '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',
+    TEMPLATE_ID: 'd-1daf0a34a5514a8b9d412c2ed2aa70de'
   }
 }
