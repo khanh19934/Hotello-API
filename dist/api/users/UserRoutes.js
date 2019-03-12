@@ -48,7 +48,22 @@ var UserRoutes = /** @class */ (function () {
             method: 'POST',
             handler: this.userController.createUser,
             options: {
-                auth: false
+                auth: false,
+                validate: {
+                    payload: {
+                        email: Joi.string().required(),
+                        password: Joi.string().required(),
+                        firstName: Joi.string().required(),
+                        lastName: Joi.string().required(),
+                        address: Joi.string().required(),
+                        phoneNumber: Joi.string().required(),
+                        cityId: Joi.number().required(),
+                        countryId: Joi.number().required(),
+                        districtId: Joi.number().required()
+                    }
+                },
+                tags: ['api', 'register'],
+                description: 'Register new user'
             }
         });
         server.route({

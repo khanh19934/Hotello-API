@@ -38,7 +38,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var sgMail = require("@sendgrid/mail");
 var Boom = require("boom");
 var configs_1 = require("../../configs");
-var email_1 = require("../../templates/email");
 var common_1 = require("../../utils/common");
 var UserController = /** @class */ (function () {
     function UserController(userServices) {
@@ -58,7 +57,12 @@ var UserController = /** @class */ (function () {
                     from: 'khanh19934@gmail.com',
                     subject: 'Hotello Active Code',
                     text: 'Hotello Active code',
-                    html: email_1.default(otpCode, fullName)
+                    html: '<h1></h1>',
+                    templateId: 'd-1daf0a34a5514a8b9d412c2ed2aa70de',
+                    dynamic_template_data: {
+                        fullName: fullName,
+                        otp: otpCode
+                    }
                 };
                 sgMail.send(msg);
                 return [2 /*return*/, h.response({ statusCode: 200, message: 'OK', data: null })];
@@ -80,13 +84,19 @@ var UserController = /** @class */ (function () {
     };
     UserController.prototype.createUser = function (req, h) {
         return __awaiter(this, void 0, void 0, function () {
-            var res;
+            var e_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.userServices.createUser(req.payload)];
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, this.userServices.createUser(req.payload)];
                     case 1:
-                        res = _a.sent();
+                        _a.sent();
                         return [2 /*return*/, h.response({ statusCode: 200, message: 'ok', data: null })];
+                    case 2:
+                        e_1 = _a.sent();
+                        throw Boom.forbidden(e_1);
+                    case 3: return [2 /*return*/];
                 }
             });
         });

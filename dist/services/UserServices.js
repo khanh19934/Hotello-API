@@ -35,6 +35,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var ramda_adjunct_1 = require("ramda-adjunct");
 var Users_1 = require("../entities/Users");
 var common_1 = require("../utils/common");
 var UserServices = /** @class */ (function () {
@@ -43,12 +44,28 @@ var UserServices = /** @class */ (function () {
     }
     UserServices.prototype.createUser = function (payload) {
         return __awaiter(this, void 0, void 0, function () {
-            var newUser;
+            var existedUser, newUser;
             return __generator(this, function (_a) {
-                newUser = new Users_1.default();
-                newUser.email = payload.email;
-                newUser.password = payload.password;
-                return [2 /*return*/, this.userRepository.save(newUser)];
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.userRepository.findOne({ where: { email: payload.email } })];
+                    case 1:
+                        existedUser = _a.sent();
+                        console.log(existedUser);
+                        if (!ramda_adjunct_1.isNilOrEmpty(existedUser)) {
+                            throw new Error('User is existed');
+                        }
+                        newUser = new Users_1.default();
+                        newUser.email = payload.email;
+                        newUser.password = payload.password;
+                        newUser.firstName = payload.firstName;
+                        newUser.address = payload.address;
+                        newUser.phoneNumber = payload.phoneNumber;
+                        newUser.lastName = payload.lastName;
+                        newUser.cityId = payload.cityId;
+                        newUser.countryId = payload.countryId;
+                        newUser.districtId = payload.districtId;
+                        return [2 /*return*/, this.userRepository.save(newUser)];
+                }
             });
         });
     };
